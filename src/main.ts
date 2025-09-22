@@ -5,10 +5,13 @@ import { AppModule } from './app.module';
 
 async function bootstrap() {
   const app = await NestFactory.create(AppModule);
-
-  process.env.TZ = '-03:00'
+//horário br
+  process.env.TZ = '-03:00';
+// validação
   app.useGlobalPipes(new ValidationPipe());
+// pro front
   app.enableCors();
+
   await app.listen(process.env.PORT ?? 4000);
 }
 bootstrap();
