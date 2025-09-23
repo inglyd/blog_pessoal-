@@ -1,19 +1,60 @@
-import { Injectable } from '@nestjs/common';
+import { HttpException, HttpStatus, Injectable } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
-import { Repository } from 'typeorm';
+import { DeleteResult, ILike, Repository } from 'typeorm';
 import { Postagem } from '../entities/postagem.entity';
-
+import { create } from 'domain';
+// injectable é usado em serviços(logica de como vai funcionar as coisas)
 @Injectable()
 export class PostagemService {
     constructor(
+        // o insegctrepository tem relação com o banco de dados, arquivo entity | todas as interações 
         @InjectRepository(Postagem)
+        // recurso do typeorm que lida com postagem
         private postagemRepository: Repository<Postagem>
     ) {}
 
     async findAll(): Promise<Postagem[]> {
+        // select * from postagens (find() do typeorm), já tem varios metodos prontos
         return this.postagemRepository.find();
     }
+
+    async findById(id: number): Promise<Postagem> {
+        const postagem = await this.postagemRepository.findOne({
+            where: {
+                id,
+            },
+        });
+
+        if (!postagem) {
+            throw new HttpException('Postagem não encontrada', HttpStatus.NOT_FOUND,
+            );
+        }
+        return postagem;
+    }
+
+    async findByTitulo(titulo: string): Promise<Postagem[]> {
+        return this.postagemRepository.find({
+            where: {
+                titulo: ILike(`%${titulo}%`)
+            }
+        })}
+
+    async create(postagem: Postagem): Promise<Postagem> {
+        return await this.postagemRepository.save(postagem);
+    }
+
+    async update (postagem: Postagem): Promise<Postagem> {
+        await this.findById(postagem.id)
+        return this.postagemRepository.save(postagem)
+    }
+    
+    async delete (id: number): Promise<DeleteResult>{
+        await this.findById(id)
+        return this.postagemRepository.delete(id)
+    }
 }
+
+ 
 
 
 // serviço que contém a regra de negócio, o que a aplicação faz
