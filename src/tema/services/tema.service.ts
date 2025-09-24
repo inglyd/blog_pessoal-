@@ -5,6 +5,7 @@ import { Repository, ILike } from 'typeorm';
 
 @Injectable()
 export class TemaService {
+    [x: string]: any;
     constructor (
         @InjectRepository(Tema)
         private temaRepository: Repository<Tema>
