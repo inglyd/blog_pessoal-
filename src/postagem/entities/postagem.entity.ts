@@ -1,6 +1,7 @@
 // atributos da entidade (tabela postagem)
-import { IsNotEmpty } from "class-validator"
-import { Column, Entity, PrimaryGeneratedColumn, UpdateDateColumn } from "typeorm"
+import { IsNotEmpty } from "class-validator";
+import { Tema } from "src/tema/entities/tema.entity";
+import { Column, Entity, ManyToOne, PrimaryGeneratedColumn, UpdateDateColumn } from "typeorm"
 
 @Entity({name: "tb_postagens"})
 export class Postagem {
@@ -17,7 +18,13 @@ export class Postagem {
     texto: string
 //updated_timestamp
     @UpdateDateColumn()
-    data: Date 
+    data: Date;
+
+    @ManyToOne(() => Tema, (tema) => tema.postagem, {
+        // se o tema for deletado, as postagens tbm serão deletadas
+        onDelete: "CASCADE",
+    })
+    tema: Tema;
 }
 
 // CREATE TABLE tb_postagens (id, titulo, texto, data);nullable(false) = not null

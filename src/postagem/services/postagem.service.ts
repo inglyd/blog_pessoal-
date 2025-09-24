@@ -2,7 +2,7 @@ import { HttpException, HttpStatus, Injectable } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { DeleteResult, ILike, Repository } from 'typeorm';
 import { Postagem } from '../entities/postagem.entity';
-import { create } from 'domain';
+
 // injectable é usado em serviços(logica de como vai funcionar as coisas)
 @Injectable()
 export class PostagemService {
@@ -15,7 +15,11 @@ export class PostagemService {
 
     async findAll(): Promise<Postagem[]> {
         // select * from postagens (find() do typeorm), já tem varios metodos prontos
-        return this.postagemRepository.find();
+        return this.postagemRepository.find({ 
+            relations:{
+            tema: true
+        }});
+       
     }
 
     async findById(id: number): Promise<Postagem> {
@@ -23,6 +27,9 @@ export class PostagemService {
             where: {
                 id,
             },
+            relations:{
+                tema: true
+            }
         });
 
         if (!postagem) {
@@ -36,6 +43,9 @@ export class PostagemService {
         return this.postagemRepository.find({
             where: {
                 titulo: ILike(`%${titulo}%`)
+            },
+            relations:{
+                tema: true
             }
         })}
 
@@ -50,6 +60,7 @@ export class PostagemService {
     
     async delete (id: number): Promise<DeleteResult>{
         await this.findById(id)
+        //deleAll é o dele sem o where
         return this.postagemRepository.delete(id)
     }
 }
