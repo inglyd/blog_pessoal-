@@ -2,20 +2,21 @@
 import { IsNotEmpty } from "class-validator";
 import { Tema } from "src/tema/entities/tema.entity";
 import { Column, Entity, ManyToOne, PrimaryGeneratedColumn, UpdateDateColumn } from "typeorm"
+import { Usuario } from "../../usuario/entities/usuario.entity";
 
 @Entity({name: "tb_postagens"})
 export class Postagem {
 
     @PrimaryGeneratedColumn()    
-    id: number
+    id: number;
 
     @IsNotEmpty()
     @Column({length: 100, nullable: false})
-    titulo: string
+    titulo: string;
 
     @IsNotEmpty()
     @Column({length: 1000, nullable: false})
-    texto: string
+    texto: string;
 //updated_timestamp
     @UpdateDateColumn()
     data: Date;
@@ -25,6 +26,10 @@ export class Postagem {
         onDelete: "CASCADE",
     })
     tema: Tema;
-}
 
+    @ManyToOne(() => Usuario, (usuario) => usuario.postagem, {
+        onDelete: "CASCADE"
+    })
+    usuario: Usuario;
+};
 // CREATE TABLE tb_postagens (id, titulo, texto, data);nullable(false) = not null

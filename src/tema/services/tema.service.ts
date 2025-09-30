@@ -14,7 +14,7 @@ export class TemaService {
         return this.temaRepository.find({
             relations: { postagem: true }
         });
-    }
+    };
     
     async findById(id: number): Promise<Tema> {
         const tema = await this.temaRepository.findOne({
@@ -28,7 +28,7 @@ export class TemaService {
             throw new HttpException('Tema não encontrado', HttpStatus.NOT_FOUND);
         }
         return tema;
-    }
+    };
 
     async findByDescricao(descricao: string): Promise<Tema[]> {
         return this.temaRepository.find({
@@ -37,11 +37,11 @@ export class TemaService {
             },
             relations: { postagem: true }
         });
-    }
+    };
 
     async create(tema: Tema): Promise<Tema> {
         return await this.temaRepository.save(tema);
-    }
+    };
 
     async update(tema: Tema): Promise<Tema> {
         await this.findById(tema.id);
@@ -52,6 +52,6 @@ export class TemaService {
         await this.findById(id);
         await this.temaRepository.delete(id);
     }
-}
+};
 
 
