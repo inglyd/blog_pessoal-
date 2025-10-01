@@ -17,7 +17,8 @@ export class PostagemService {
         // select * from postagens (find() do typeorm), já tem varios metodos prontos
         return this.postagemRepository.find({ 
             relations:{
-            tema: true
+            tema: true,
+            usuario: true
         }});
        
     }
@@ -28,7 +29,8 @@ export class PostagemService {
                 id,
             },
             relations:{
-                tema: true
+                tema: true,
+                usuario: true
             }
         });
 
@@ -45,7 +47,8 @@ export class PostagemService {
                 titulo: ILike(`%${titulo}%`)
             },
             relations:{
-                tema: true
+                tema: true,
+                usuario: true
             }
         })}
 
